@@ -12,6 +12,9 @@ module.exports = {
         win: {
           icon: 'icon.ico',
         },
+        snap: {
+          publish: ['github'],
+        },
         publish: {
           provider: 'github',
           repo: 'htp1-custom-ui-background-service',
