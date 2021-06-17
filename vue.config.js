@@ -8,6 +8,12 @@ module.exports = {
           category: 'Utility',
           icon: 'icon.png',
         },
+        mac: {
+          icon: 'build/icon.png',
+        },
+        win: {
+          icon: 'build/icon.ico',
+        },
         publish: {
           provider: 'github',
           repo: 'htp1-custom-ui-background-service',
