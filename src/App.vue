@@ -3,6 +3,16 @@
     <div class="row mb-3">
       <div class="col">
         <h1>HTP-1 Background Service</h1>
+        <div class="alert alert-primary" role="alert" v-if="updateVersion">
+          <div class="row">
+            <div class="col">Software version {{ updateVersion }} is ready to install.</div>
+            <div class="col-auto">
+              <button class="btn btn-sm btn-success" @click="requestInstallUpdate">
+                Install Update
+              </button>
+            </div>
+          </div>
+        </div>
         <h2>Connect</h2>
         <form @submit.prevent="validateAndSetWebsocketurl(ipAddressText)">
           <div class="mb-3">
@@ -75,7 +85,7 @@ export default {
     const ipAddressText = ref(websocketIp.value);
     const ipSet = ref(new Set());
     const ipList = ref([]);
-
+    const updateVersion = ref(null);
     const eventLog = ref([]);
 
     onMounted(() => {
@@ -83,7 +93,7 @@ export default {
         ipSet.value.add(websocketIp.value);
       }
 
-      window.window.ipcRenderer.receive('ipListFromMain', (ipListFromMain) => {
+      window.ipcRenderer.receive('ipListFromMain', (ipListFromMain) => {
         for (const ip of ipListFromMain) {
           ipSet.value.add(ip);
         }
@@ -94,11 +104,19 @@ export default {
           findServers(ipList.value, 4000);
         }
       });
+
+      window.ipcRenderer.receive('readyToInstall', (updateInfo) => {
+        updateVersion.value = updateInfo.version;
+      });
     });
 
     function validateAndSetWebsocketurl(url) {
       // todo: if valid
       setWebsocketIp(url);
+    }
+
+    function requestInstallUpdate() {
+      window.ipcRenderer.send('installUpdateRequested');
     }
 
     function applyDefaultsForCurrentInput(reason) {
@@ -185,10 +203,8 @@ export default {
 
     watch(state, () => {
       if (state.value === 'OPEN') {
-        console.log('send connected true?');
         window.ipcRenderer.send('connected', true);
       } else {
-        console.log('send connected false?');
         window.ipcRenderer.send('connected', false);
       }
     });
@@ -207,6 +223,8 @@ export default {
       ipList,
       validateAndSetWebsocketurl,
       eventLog,
+      updateVersion,
+      requestInstallUpdate,
     };
   },
 };

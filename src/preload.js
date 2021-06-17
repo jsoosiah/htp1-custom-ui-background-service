@@ -6,13 +6,13 @@ import find from 'local-devices';
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) => {
     // whitelist channels
-    let validChannels = ['ipListToMain', 'connected'];
+    let validChannels = ['ipListToMain', 'connected', 'installUpdateRequested'];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   receive: (channel, func) => {
-    let validChannels = ['ipListFromMain'];
+    let validChannels = ['ipListFromMain', 'readyToInstall'];
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
       ipcRenderer.on(channel, (event, ...args) => func(...args));

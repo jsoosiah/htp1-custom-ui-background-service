@@ -68,6 +68,12 @@ async function createWindow() {
     // Load the index.html when not in development
     mainWindow.loadURL('app://./index.html');
     autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.on('update-downloaded', (updateInfo) => {
+      mainWindow.webContents.send('readyToInstall', updateInfo);
+    });
+    ipcMain.on('installUpdateRequested', () => {
+      autoUpdater.quitAndInstall();
+    });
   }
 }
 
