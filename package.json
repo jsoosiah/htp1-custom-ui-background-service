@@ -3,6 +3,10 @@
   "description": "Background Service for HTP-1 Custom UI.",
   "version": "0.1.0",
   "author": "Jeff Soosiah",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jsoosiah/htp1-custom-ui-background-service.git"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
