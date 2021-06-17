@@ -6,21 +6,15 @@ module.exports = {
         appId: 'com.jsoosiah.htp1CustomUiBackgroundService',
         linux: {
           category: 'Utility',
-          icon: 'icon.png',
         },
-        mac: {
-          icon: 'icon.png',
-        },
+        mac: {},
         win: {
-          icon: 'icon.ico',
           target: {
             target: 'nsis',
             arch: ['x64', 'ia32'],
           },
         },
-        nsis: {
-          installerIcon: 'installerIcon.ico',
-        },
+        nsis: {},
         publish: {
           provider: 'github',
           repo: 'htp1-custom-ui-background-service',
