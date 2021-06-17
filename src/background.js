@@ -4,6 +4,7 @@
 import { app, protocol, ipcMain, Menu, Tray, BrowserWindow } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -16,9 +17,12 @@ protocol.registerSchemesAsPrivileged([
 let mainWindow = null;
 let tray = null;
 
+const baseTitle = `HTP-1 Custom UI Background Service Update Test ${app.getVersion()}`;
+
 async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    title: baseTitle,
     width: 1280,
     height: 720,
     webPreferences: {
@@ -63,6 +67,7 @@ async function createWindow() {
     createProtocol('app');
     // Load the index.html when not in development
     mainWindow.loadURL('app://./index.html');
+    autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
@@ -146,7 +151,9 @@ function setTrayStatusConnected() {
   tray.setImage(path.join(__static, 'htp1-connected.ico'));
   // eslint-disable-next-line no-undef
   mainWindow.setIcon(path.join(__static, 'htp1-connected.ico'));
-  tray.setToolTip('HTP-1 Custom UI Background Service - Connected');
+  const title = `${baseTitle} - Connected`;
+  mainWindow.setTitle(title);
+  tray.setToolTip(title);
 }
 
 function setTrayStatusDisconnected() {
@@ -154,5 +161,7 @@ function setTrayStatusDisconnected() {
   tray.setImage(path.join(__static, 'htp1-disconnected.ico'));
   // eslint-disable-next-line no-undef
   mainWindow.setIcon(path.join(__static, 'htp1-disconnected.ico'));
-  tray.setToolTip('HTP-1 Custom UI Background Service - Disconnected');
+  const title = `${baseTitle} - Disconnected`;
+  mainWindow.setTitle(title);
+  tray.setToolTip(title);
 }
