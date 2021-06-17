@@ -17,7 +17,7 @@ protocol.registerSchemesAsPrivileged([
 let mainWindow = null;
 let tray = null;
 
-const baseTitle = `HTP-1 Custom UI Background Service Update Test ${app.getVersion()}`;
+const baseTitle = `HTP-1 Custom UI Background Service ${app.getVersion()}`;
 
 async function createWindow() {
   // Create the browser window.
