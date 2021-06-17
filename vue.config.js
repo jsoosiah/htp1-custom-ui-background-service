@@ -9,10 +9,12 @@ module.exports = {
         },
         mac: {},
         win: {
-          target: {
-            target: 'nsis',
-            arch: ['x64'],
-          },
+          target: [
+            {
+              target: 'nsis',
+              arch: ['x64'],
+            },
+          ],
         },
         nsis: {},
         publish: {
