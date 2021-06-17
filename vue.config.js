@@ -13,6 +13,10 @@ module.exports = {
         },
         win: {
           icon: 'icon.ico',
+          target: 'nsis',
+        },
+        nsis: {
+          installerIcon: 'installerIcon.ico',
         },
         publish: {
           provider: 'github',
