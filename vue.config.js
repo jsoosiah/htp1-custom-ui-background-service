@@ -16,8 +16,10 @@ module.exports = {
           target: {
             target: 'nsis',
             arch: ['x64', 'ia32'],
-            installerIcon: 'installerIcon.ico',
           },
+        },
+        nsis: {
+          installerIcon: 'installerIcon.ico',
         },
         publish: {
           provider: 'github',
