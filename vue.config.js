@@ -9,11 +9,9 @@ module.exports = {
           icon: 'icon.png',
         },
         publish: {
-          GithubOptions: {
-            provider: 'github',
-            repo: 'git://github.com/jsoosiah/htp1-custom-ui-background-service.git',
-            owner: 'jsoosiah',
-          },
+          provider: 'github',
+          repo: 'git://github.com/jsoosiah/htp1-custom-ui-background-service.git',
+          owner: 'jsoosiah',
         },
       },
     },
