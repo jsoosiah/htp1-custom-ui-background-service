@@ -13,10 +13,11 @@ module.exports = {
         },
         win: {
           icon: 'icon.ico',
-          target: 'nsis',
-        },
-        nsis: {
-          installerIcon: 'installerIcon.ico',
+          target: {
+            target: 'nsis',
+            arch: ['x64', 'ia32'],
+            installerIcon: 'installerIcon.ico',
+          },
         },
         publish: {
           provider: 'github',
