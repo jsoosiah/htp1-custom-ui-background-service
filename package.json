@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "author": "Jeff Soosiah",
   "private": true,
+  "build": {
+    "appId": "com.jsoosiah.htp1CustomUiBackgroundService",
+    "electronDownload": {
+      "cache": "./.electron-cache"
+    }
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
