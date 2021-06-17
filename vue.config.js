@@ -4,6 +4,10 @@ module.exports = {
       preload: 'src/preload.js',
       builderOptions: {
         appId: 'com.jsoosiah.htp1CustomUiBackgroundService',
+        linux: {
+          category: 'Utility',
+          icon: 'icon.png',
+        },
       },
     },
   },
