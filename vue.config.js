@@ -10,7 +10,7 @@ module.exports = {
         },
         publish: {
           provider: 'github',
-          repo: 'git://github.com/jsoosiah/htp1-custom-ui-background-service.git',
+          repo: 'htp1-custom-ui-background-service',
           owner: 'jsoosiah',
         },
       },
