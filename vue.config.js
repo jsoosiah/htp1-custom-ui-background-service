@@ -5,18 +5,13 @@ module.exports = {
       builderOptions: {
         appId: 'com.jsoosiah.htp1CustomUiBackgroundService',
         linux: {
+          icon: 'icon.png',
           category: 'Utility',
         },
-        mac: {},
+        mac: { icon: 'icon.png' },
         win: {
-          target: [
-            {
-              target: 'nsis',
-              arch: ['x64'],
-            },
-          ],
+          icon: 'icon.ico',
         },
-        nsis: {},
         publish: {
           provider: 'github',
           repo: 'htp1-custom-ui-background-service',
