@@ -9,10 +9,10 @@ module.exports = {
           icon: 'icon.png',
         },
         mac: {
-          icon: 'build/icon.png',
+          icon: 'icon.png',
         },
         win: {
-          icon: 'build/icon.ico',
+          icon: 'icon.ico',
         },
         publish: {
           provider: 'github',
