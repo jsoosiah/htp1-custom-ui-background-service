@@ -80,8 +80,17 @@ export default {
   setup() {
     const { websocketIp, findServers, setWebsocketIp } = useWebSocket();
 
-    const { mso, state, setUpmix, upmixLabels, setLipsyncDelay, currentDiracSlot, setDiracSlot } =
-      useMso();
+    const {
+      mso,
+      state,
+      setUpmix,
+      upmixLabels,
+      setLipsyncDelay,
+      currentDiracSlot,
+      setDiracSlot,
+      resetBEQ,
+      removeBEQActive,
+    } = useMso();
     const ipAddressText = ref(websocketIp.value);
     const ipSet = ref(new Set());
     const ipList = ref([]);
@@ -166,6 +175,28 @@ export default {
         });
 
         setDiracSlot(currentInput?.value?.diracslot);
+      }
+
+      // reset BEQ filters if needed
+      for (const ch of ['sub1', 'sub2', 'sub3', 'sub4', 'sub5']) {
+        for (let slot = 0; slot < 16; slot++) {
+          if (mso.value.peq.slots[slot].channels[ch].beq) {
+            resetBEQ(ch, slot);
+          }
+        }
+      }
+
+      console.log('digest?', mso.value.peq.beqActiveDigest);
+
+      if (mso.value.peq.beqActiveDigest) {
+        eventLog.value.unshift({
+          event: `Clear BEQ Filters`,
+          reason: reason,
+          old: mso.value.peq.beqActiveDigest,
+          new: '',
+          time: new Date(),
+        });
+        removeBEQActive();
       }
 
       while (eventLog.value.length > 50) {

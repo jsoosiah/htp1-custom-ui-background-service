@@ -251,16 +251,19 @@ function applyProductRules() {
       _setSignalGeneratorChannel2();
     }
 
-    for (const inputKey in mso.value.inputs) {
+    for (let inputKey in mso.value.inputs) {
       if (mso.value.inputs) {
-        if (Object.prototype.hasOwnProperty.call(!mso.value.inputs[inputKey], 'defaultUpmix')) {
+        if (!Object.prototype.hasOwnProperty.call(mso.value.inputs[inputKey], 'defaultUpmix')) {
           _setInputDefaultUpmix(inputKey);
         }
-        if (Object.prototype.hasOwnProperty.call(!mso.value.inputs[inputKey], 'gain')) {
+        if (!Object.prototype.hasOwnProperty.call(mso.value.inputs[inputKey], 'gain')) {
           _setInputVolumeTrim(inputKey);
         }
-        if (Object.prototype.hasOwnProperty.call(!mso.value.inputs[inputKey], 'delay')) {
+        if (!Object.prototype.hasOwnProperty.call(mso.value.inputs[inputKey], 'delay')) {
           initializeInputDelay(inputKey);
+        }
+        if (!Object.prototype.hasOwnProperty.call(mso.value.inputs[inputKey], 'diracslot')) {
+          initializeInputDiracSlot(inputKey);
         }
       }
     }
@@ -457,7 +460,7 @@ const visibleUpmixers = computed(() => {
 const visibleDiracSlots = computed(() => {
   const filtered = {};
   if (mso.value.personalize?.diracSlots) {
-    for (const slotIndex in mso.value.personalize?.diracSlots) {
+    for (let slotIndex in mso.value.personalize?.diracSlots) {
       filtered[slotIndex] = mso.value.cal?.slots[slotIndex];
     }
   }
@@ -467,7 +470,7 @@ const visibleDiracSlots = computed(() => {
 const visibleMacros = computed(() => {
   const filtered = {};
   if (mso.value.personalize?.macros) {
-    for (const key in mso.value.personalize?.macros) {
+    for (let key in mso.value.personalize?.macros) {
       if (mso.value.svronly[key]) {
         filtered[key] = mso.value.svronly[key];
       } else if (mso.value.svronly.extraMacros[key]) {
@@ -503,7 +506,7 @@ const diracBCEnabled = computed(() => {
 });
 
 const showCrossoverControls = computed(() => {
-  return !(mso.value.cal?.diracactive === 'on' && diracBCEnabled.value);
+  return !(mso.value.cal?.diracactive == 'on' && diracBCEnabled.value);
 });
 
 const calToolConnected = computed(() => {
@@ -534,7 +537,7 @@ const powerIsOn = computed(() => {
 
 // watch mso power state
 watch(powerIsOn, (newPower, oldPower) => {
-  if (newPower !== oldPower) {
+  if (newPower != oldPower) {
     bmlfecApplied = false;
   }
 });
@@ -786,7 +789,7 @@ function setMaxOutputLevel(outputLevel) {
 }
 
 function setLipsyncDelay(lipsyncDelay) {
-  const delay = convertInt(lipsyncDelay, 0, 0, 200);
+  let delay = convertInt(lipsyncDelay, 0, 0, 200);
   return patchMso('replace', '/cal/lipsync', delay);
 }
 
@@ -870,7 +873,7 @@ function toggleMuteChannel(channel) {
 
 function setMuteAllChannelsOn() {
   let result = true;
-  for (const channel in currentDiracSlot.value.channels) {
+  for (let channel in currentDiracSlot.value.channels) {
     result = setMuteChannelOn(channel) && result;
   }
 
@@ -879,7 +882,7 @@ function setMuteAllChannelsOn() {
 
 function setMuteAllChannelsOff() {
   let result = true;
-  for (const channel in currentDiracSlot.value.channels) {
+  for (let channel in currentDiracSlot.value.channels) {
     result = setMuteChannelOff(channel) && result;
   }
 
@@ -888,7 +891,7 @@ function setMuteAllChannelsOff() {
 
 function toggleAllMuteChannels() {
   let result = true;
-  for (const channel in currentDiracSlot.value.channels) {
+  for (let channel in currentDiracSlot.value.channels) {
     result = toggleMuteChannel(channel) && result;
   }
 
@@ -933,12 +936,12 @@ function setSignalGeneratorSignalType(signalType) {
 }
 
 function setSineFrequency(freq) {
-  const freqValue = convertInt(freq, 440, 10, 20000);
+  let freqValue = convertInt(freq, 440, 10, 20000);
   return patchMso('replace', `/sgen/sinehz`, freqValue);
 }
 
 function setSineAmplitude(gain) {
-  const gainValue = convertFloat(gain, -20, -140, 0);
+  let gainValue = convertFloat(gain, -20, -140, 0);
   return patchMso('replace', `/sgen/sinedb`, gainValue);
 }
 
@@ -1008,19 +1011,19 @@ function setPEQSlot(bandNumber) {
 }
 
 function setPEQCenterFrequency(channel, slot, centerFreq) {
-  const centerFreqValue = convertFloat(centerFreq, 100.0, 15.0, 20000.0);
+  let centerFreqValue = convertFloat(centerFreq, 100.0, 10.0, 20000.0);
 
   return patchMso('replace', `/peq/slots/${slot}/channels/${channel}/Fc`, centerFreqValue);
 }
 
 function setPEQGain(channel, slot, gain) {
-  const gainValue = convertFloat(gain, 0.0, -20.0, 20.0);
+  let gainValue = convertFloat(gain, 0.0, -20.0, 20.0);
 
   return patchMso('replace', `/peq/slots/${slot}/channels/${channel}/gaindB`, gainValue);
 }
 
 function setPEQQuality(channel, slot, q) {
-  const qValue = convertFloat(q, 1.0, 0.1, 10.0);
+  let qValue = convertFloat(q, 1.0, 0.1, 10.0);
 
   return patchMso('replace', `/peq/slots/${slot}/channels/${channel}/Q`, qValue);
 }
@@ -1033,6 +1036,18 @@ function setPEQFilterType(channel, slot, filterType) {
   );
 }
 
+function addBEQFlag(channel, slot) {
+  return patchMso('add', `/peq/slots/${slot}/channels/${channel}/beq`, true);
+}
+
+function addBEQActive(digest) {
+  return patchMso('add', `/peq/beqActiveDigest`, digest);
+}
+
+function removeBEQActive() {
+  return patchMso('remove', '/peq/beqActiveDigest');
+}
+
 function resetPEQ(channel, slot) {
   const fc = setPEQCenterFrequency(channel, slot, 100);
   const gain = setPEQGain(channel, slot, 0);
@@ -1040,6 +1055,13 @@ function resetPEQ(channel, slot) {
   const filterType = setPEQFilterType(channel, slot, 0);
 
   return fc && gain && q && filterType;
+}
+
+function resetBEQ(channel, slot) {
+  const removeBEQFlag = patchMso('remove', `/peq/slots/${slot}/channels/${channel}/beq`);
+  const reset = resetPEQ(channel, slot);
+
+  return removeBEQFlag && reset;
 }
 
 function setInputLabel(input, label) {
@@ -1078,7 +1100,7 @@ function _setInputVolumeTrim(input, trim, op) {
     op = Object.prototype.hasOwnProperty.call(mso.value.inputs[input], 'gain') ? 'replace' : 'add';
   }
 
-  const trimValue = convertInt(trim, 0, -12, 12);
+  let trimValue = convertInt(trim, 0, -12, 12);
   return patchMso('replace', `/inputs/${input}/gain`, trimValue);
 }
 
@@ -1087,8 +1109,17 @@ function initializeInputDelay(input) {
 }
 
 function setInputDelay(input, delayStr) {
-  const delay = convertInt(delayStr, 0, 0, 200);
+  let delay = convertInt(delayStr, 0, 0, 200);
   return patchMso('replace', `/inputs/${input}/delay`, delay);
+}
+
+function initializeInputDiracSlot(input) {
+  console.log('init dirac?');
+  return patchMso('add', `/inputs/${input}/diracslot`, null);
+}
+
+function setInputDiracSlot(input, diracslot) {
+  return patchMso('replace', `/inputs/${input}/diracslot`, convertInt(diracslot, null, 0, 6));
 }
 
 // Warning: custom attribute
@@ -1260,7 +1291,7 @@ function initializeBassLpf() {
 }
 
 function setBassLpf(lpf) {
-  const lpfValue = convertInt(lpf, 120, 40, 200);
+  let lpfValue = convertInt(lpf, 120, 40, 200);
   bmlfecApplied = false;
   return patchMso('replace', '/bassLpf', parseInt(lpfValue));
 }
@@ -1502,6 +1533,10 @@ export default function useMso() {
     setPEQQuality,
     setPEQFilterType,
     resetPEQ,
+    addBEQFlag,
+    resetBEQ,
+    addBEQActive,
+    removeBEQActive,
     setInputLabel,
     toggleInputVisible,
     setInputFormatDetectOption,
@@ -1509,6 +1544,7 @@ export default function useMso() {
     setInputDefaultUpmix,
     setInputVolumeTrim,
     setInputDelay,
+    setInputDiracSlot,
     setBluetoothDiscoverableTime,
     enableBluetoothDiscovery,
     toggleCEC,
@@ -1637,7 +1673,7 @@ function convertFloat(value, defaultValue, minValue, maxValue) {
 }
 
 function convert(convertFunction, value, defaultValue, minValue, maxValue) {
-  const intValue = convertFunction(value);
+  let intValue = convertFunction(value);
 
   if (isNaN(intValue)) {
     return defaultValue;
