@@ -186,13 +186,13 @@ export default {
         }
       }
 
-      console.log('digest?', mso.value.peq.beqActiveDigest);
+      console.log('digest?', mso.value.peq.beqActive);
 
-      if (mso.value.peq.beqActiveDigest) {
+      if (mso.value.peq.beqActive) {
         eventLog.value.unshift({
           event: `Clear BEQ Filters`,
           reason: reason,
-          old: mso.value.peq.beqActiveDigest,
+          old: mso.value.peq.beqActive,
           new: '',
           time: new Date(),
         });

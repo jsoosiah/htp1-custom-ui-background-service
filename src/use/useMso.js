@@ -1040,12 +1040,12 @@ function addBEQFlag(channel, slot) {
   return patchMso('add', `/peq/slots/${slot}/channels/${channel}/beq`, true);
 }
 
-function addBEQActive(digest) {
-  return patchMso('add', `/peq/beqActiveDigest`, digest);
+function addBEQActive(underlying) {
+  return patchMso('add', `/peq/beqActive`, underlying);
 }
 
 function removeBEQActive() {
-  return patchMso('remove', '/peq/beqActiveDigest');
+  return patchMso('remove', '/peq/beqActive');
 }
 
 function resetPEQ(channel, slot) {
