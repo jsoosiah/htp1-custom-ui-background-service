@@ -3,6 +3,7 @@
 
 // websocket URL - user configurable and saved to device local storage
 // const websocketIp = ref(localStorage.getItem('websocketIp'));
+import { times, random } from 'lodash-es';
 
 import useLocalStorage from './useLocalStorage.js';
 
@@ -196,6 +197,8 @@ class WSClient {
 
 const data = ref(null);
 const state = ref('CONNECTING');
+const eventHash = ref(null);
+
 let ws;
 const close = function close(code, reason) {
   if (!ws) return;
@@ -223,6 +226,7 @@ function initialize() {
     };
     ws.onmessage = (e) => {
       data.value = e.data;
+      eventHash.value = times(20, () => random(35).toString(36)).join('');
     };
   }
 }
@@ -246,5 +250,6 @@ export default function useWebSocket() {
     websocketurl,
     setWebsocketIp,
     findServers,
+    eventHash,
   };
 }
