@@ -24,6 +24,12 @@ const showChannelMuteControls = ref(
 
 const maxWaitTimeToSendToMso = ref(375);
 
+const runOnSystemStartup = ref(
+  localStorage.getItem('runOnSystemStartup')
+    ? JSON.parse(localStorage.getItem('runOnSystemStartup'))
+    : false
+);
+
 export default function useLocalStorage() {
   function setWebsocketIp(url) {
     websocketIp.value = url;
@@ -50,6 +56,11 @@ export default function useLocalStorage() {
     localStorage.setItem('showChannelMuteControls', showChannelMuteControls.value);
   }
 
+  function toggleRunOnSystemStartup() {
+    runOnSystemStartup.value = !runOnSystemStartup.value;
+    localStorage.setItem('runOnSystemStartup', runOnSystemStartup.value);
+  }
+
   return {
     websocketIp,
     setWebsocketIp,
@@ -61,5 +72,7 @@ export default function useLocalStorage() {
     setMaxWaitTimeToSendToMso,
     showChannelMuteControls,
     toggleShowChannelMuteControls,
+    runOnSystemStartup,
+    toggleRunOnSystemStartup,
   };
 }

@@ -6,7 +6,12 @@ import find from 'local-devices';
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel, data) => {
     // whitelist channels
-    let validChannels = ['ipListToMain', 'connected', 'installUpdateRequested'];
+    let validChannels = [
+      'ipListToMain',
+      'connected',
+      'installUpdateRequested',
+      'runOnSystemStartupChanged',
+    ];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }

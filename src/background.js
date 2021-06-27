@@ -6,6 +6,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import AutoLaunch from 'auto-launch';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -18,6 +19,11 @@ let mainWindow = null;
 let tray = null;
 
 const baseTitle = `HTP-1 Custom UI Background Service ${app.getVersion()}`;
+
+let autoLaunch = new AutoLaunch({
+  name: baseTitle,
+  path: app.getPath('exe'),
+});
 
 async function createWindow() {
   // Create the browser window.
@@ -131,6 +137,23 @@ app.whenReady().then(async () => {
       setTrayStatusConnected();
     } else {
       setTrayStatusDisconnected();
+    }
+  });
+
+  ipcMain.on('runOnSystemStartupChanged', async (e, enableAutoLaunch) => {
+    const currentlyEnabled = await autoLaunch.isEnabled();
+    try {
+      if (enableAutoLaunch) {
+        if (!currentlyEnabled) {
+          await autoLaunch.enable();
+        }
+      } else {
+        if (currentlyEnabled) {
+          await autoLaunch.disable();
+        }
+      }
+    } catch (e) {
+      console.error(e);
     }
   });
 

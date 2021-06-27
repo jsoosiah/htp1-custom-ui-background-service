@@ -33,17 +33,33 @@
             </div>
             <div v-else class="form-text">Not connected.</div>
           </div>
-          <button type="submit" class="btn btn-primary" :disabled="ipAddressText === websocketIp">
+          <button
+            type="submit"
+            class="btn btn-primary mb-3"
+            :disabled="ipAddressText === websocketIp"
+          >
             Save
           </button>
         </form>
+        <h2>Options</h2>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="run-on-startup"
+            :checked="runOnSystemStartup"
+            @change="toggleRunOnSystemStartup"
+          />
+          <label class="form-check-label" for="run-on-startup">Run on system startup</label>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col">
         <h2>Event Log</h2>
         <div class="table-responsive">
-          <table class="table table-hover table-sm table-striped small">
+          <table class="table table-sm small">
             <thead>
               <tr>
                 <th scope="col">Event</th>
@@ -74,11 +90,13 @@ import { onMounted, ref, watch, computed } from 'vue';
 
 import useMso from '@/use/useMso.js';
 import useWebSocket from '@/use/useWebSocket.js';
+import useLocalStorage from '@/use/useLocalStorage.js';
 
 export default {
   name: 'App',
   setup() {
     const { websocketIp, findServers, setWebsocketIp } = useWebSocket();
+    const { runOnSystemStartup, toggleRunOnSystemStartup } = useLocalStorage();
 
     const {
       mso,
@@ -186,8 +204,6 @@ export default {
         }
       }
 
-      console.log('digest?', mso.value.peq.beqActive);
-
       if (mso.value.peq.beqActive) {
         eventLog.value.unshift({
           event: `Clear BEQ Filters`,
@@ -244,6 +260,16 @@ export default {
       ipAddressText.value = websocketIp.value;
     });
 
+    watch(
+      runOnSystemStartup,
+      () => {
+        window.ipcRenderer.send('runOnSystemStartupChanged', runOnSystemStartup.value);
+      },
+      {
+        immediate: true,
+      }
+    );
+
     return {
       mso,
       powerIsOn,
@@ -256,6 +282,8 @@ export default {
       eventLog,
       updateVersion,
       requestInstallUpdate,
+      runOnSystemStartup,
+      toggleRunOnSystemStartup,
     };
   },
 };
