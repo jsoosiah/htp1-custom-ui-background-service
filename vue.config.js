@@ -20,6 +20,13 @@ module.exports = {
           repo: 'htp1-custom-ui-background-service',
           owner: 'jsoosiah',
         },
+        extraResources: [
+          {
+            from: 'public',
+            to: '.',
+            filter: '**/*.ico',
+          },
+        ],
       },
     },
   },

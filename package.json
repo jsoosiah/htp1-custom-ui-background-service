@@ -1,7 +1,7 @@
 {
   "name": "htp1-custom-ui-background-service",
   "description": "Background Service for HTP-1 Custom UI.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "Jeff Soosiah",
   "repository": {
     "type": "git",
