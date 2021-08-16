@@ -72,7 +72,7 @@ async function createWindow() {
   } else {
     createProtocol('app');
     // Load the index.html when not in development
-    mainWindow.loadURL('app://./index.html');
+    mainWindow.loadURL(path.join(__dirname, 'index.html'));
     autoUpdater.checkForUpdatesAndNotify();
     autoUpdater.on('update-downloaded', (updateInfo) => {
       mainWindow.webContents.send('readyToInstall', updateInfo);

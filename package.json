@@ -1,13 +1,9 @@
 {
   "name": "htp1-custom-ui-background-service",
-  "description": "Background Service for HTP-1 Custom UI.",
-  "version": "0.9.0",
-  "author": "Jeff Soosiah",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jsoosiah/htp1-custom-ui-background-service.git"
-  },
+  "version": "0.10.0",
   "private": true,
+  "description": "Background Service for HTP-1 Custom UI.",
+  "author": "Jeff Soosiah",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -43,5 +39,9 @@
     "eslint-plugin-vue": "^7.0.0",
     "prettier": "^2.2.1",
     "vue-cli-plugin-electron-builder": "~2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jsoosiah/htp1-custom-ui-background-service.git"
   }
 }
