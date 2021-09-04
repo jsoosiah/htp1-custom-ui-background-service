@@ -120,17 +120,9 @@ export default {
         ipSet.value.add(websocketIp.value);
       }
 
-      window.ipcRenderer.receive('ipListFromMain', (ipListFromMain) => {
-        for (const ip of ipListFromMain) {
-          ipSet.value.add(ip);
-        }
-
-        ipList.value = [...ipSet.value];
-
-        if (!websocketIp.value) {
-          findServers(ipList.value, 4000);
-        }
-      });
+      if (!websocketIp.value) {
+        findServers(ipList.value, 4000);
+      }
 
       window.ipcRenderer.receive('readyToInstall', (updateInfo) => {
         updateVersion.value = updateInfo.version;
