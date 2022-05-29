@@ -108,6 +108,7 @@ export default {
       setDiracSlot,
       resetBEQ,
       removeBEQActive,
+      executeMacro,
     } = useMso();
     const ipAddressText = ref(websocketIp.value);
     const ipSet = ref(new Set());
@@ -187,6 +188,23 @@ export default {
         setDiracSlot(currentInput?.value?.diracslot);
       }
 
+      // run input macro if needed
+      if (typeof currentInput?.value?.macro === 'string') {
+        const macro = getMacroCommands(currentInput?.value?.macro);
+
+        if (macro) {
+          eventLog.value.unshift({
+            event: `Run Macro for ${currentInput?.value?.label}`,
+            reason: reason,
+            old: '--',
+            new: mso?.value?.svronly?.macroNames[currentInput?.value?.macro],
+            time: new Date(),
+          });
+
+          executeMacro(macro);
+        }
+      }
+
       // reset BEQ filters if needed
       for (const ch of ['sub1', 'sub2', 'sub3', 'sub4', 'sub5']) {
         for (let slot = 0; slot < 16; slot++) {
@@ -210,6 +228,14 @@ export default {
       while (eventLog.value.length > 50) {
         eventLog.value.pop();
       }
+    }
+
+    function getMacroCommands(macroId) {
+      if (Object.prototype.hasOwnProperty.call(mso?.value?.svronly, macroId)) {
+        return mso?.value?.svronly[macroId];
+      }
+
+      return mso?.value?.svronly.extraMacros[macroId];
     }
 
     const powerIsOn = computed(() => {

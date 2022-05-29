@@ -1,6 +1,6 @@
 {
   "name": "htp1-custom-ui-background-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Background Service for HTP-1 Custom UI.",
   "author": "Jeff Soosiah",
